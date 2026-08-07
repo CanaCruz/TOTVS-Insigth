@@ -1,0 +1,5 @@
+# Ferramenta interna. Não indexar.
+# Antes isto era gerado pelo plugin da Figma a partir de .figma/make/site.json
+# ("robots": { "index": false }); agora é um arquivo estático do projeto.
+User-agent: *
+Disallow: /

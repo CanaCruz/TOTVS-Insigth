@@ -10,6 +10,7 @@
     "typecheck": "tsc --noEmit",
     "build": "vite build",
     "build:pages": "vite build --base=./",
+    "pages:prepare": "pnpm data:build:publico && pnpm build:pages && node scripts/prepare-pages.mjs",
     "preview": "vite preview",
     "format": "oxfmt"
   },

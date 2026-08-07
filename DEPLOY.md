@@ -27,6 +27,34 @@ textos**. É o que `pnpm data:build:publico` faz.
 Com o build público, o app funciona inteiro — dashboard, KPIs, tabela, filtros,
 paginação. Só o painel de transcrição mostra um aviso explicando a ausência.
 
+## Passo a passo (GitHub Pages — pasta `/docs`)
+
+1. Gere o site para Pages (índice público + `dist/` + cópia em `docs/`):
+
+   ```bash
+   pnpm pages:prepare
+   ```
+
+2. No GitHub: **Settings → Pages**
+   - Source: Deploy from a branch
+   - Branch: `main`
+   - Folder: `/docs`
+   - Save
+
+3. Commit e push **incluindo a pasta `docs/`** (ela não está no `.gitignore`
+   de propósito). Não versionar `data-source/` nem `public/data/`.
+
+URL típica: `https://SEU_USER.github.io/NOME_DO_REPO/`
+
+Sempre que mudar o app e quiser republicar:
+
+```bash
+pnpm pages:prepare
+git add docs
+git commit -m "Atualiza site do GitHub Pages"
+git push
+```
+
 ## Passo a passo (Vercel)
 
 O `vercel.json` já está configurado: build, rewrite de SPA, `X-Robots-Tag:
@@ -67,6 +95,6 @@ Não deixe como arquivo estático. Duas opções, em ordem de esforço:
 ## Checklist antes de publicar
 
 - [ ] Rodou `pnpm data:build:publico` (e não o `data:build` completo)
-- [ ] `dist/data/transcricoes/` **não existe**
+- [ ] `dist/data/transcricoes/` **não existe** (nem `docs/data/transcricoes/`)
 - [ ] `npx tsc --noEmit` limpo (o `pnpm build` sozinho não checa tipos)
 - [ ] Trocou as contas de demonstração em `src/auth/authService.ts`
