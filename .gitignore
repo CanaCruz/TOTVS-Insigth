@@ -1,0 +1,19 @@
+node_modules/
+dist/
+build/
+.cache/
+.env*
+.vite/
+vite.config.*.timestamp-*
+*.tsbuildinfo
+*-debug.log*
+logs/
+*.log
+.claude-replay.*
+.tmp-*
+
+# Dump bruto das reuniões (46 MB) — nunca versionar: é conteúdo de cliente.
+data-source/
+
+# Artefatos gerados por `pnpm data:build`.
+public/data/

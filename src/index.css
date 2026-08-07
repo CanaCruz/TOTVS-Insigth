@@ -1,0 +1,145 @@
+/*
+ * Fontes servidas pelo próprio projeto (`src/assets/fonts/`).
+ *
+ * Antes vinham de `static.figma.com`, o que deixava a tipografia do app
+ * dependendo de um CDN de terceiros — se aquelas URLs mudassem, o site perdia
+ * as fontes em produção.
+ *
+ * Konkhmer Sleokchher usa o subset latino em woff2 do Google Fonts (19 KB, em
+ * vez dos 624 KB do arquivo completo com todos os glifos khmer, que este app
+ * não usa). Kedebideri não existe no Google Fonts e vem em TrueType.
+ *
+ * `font-display: swap` mostra o texto imediatamente com a fonte de sistema e
+ * troca quando a fonte chega, em vez de deixar a tela em branco.
+ */
+
+@font-face {
+  font-family: "Konkhmer Sleokchher";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("./assets/fonts/konkhmer-sleokchher-400-latin.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Kedebideri";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("./assets/fonts/kedebideri-400.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Kedebideri";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("./assets/fonts/kedebideri-500.ttf") format("truetype");
+}
+
+@import "tailwindcss";
+
+/* Modo escuro por classe em <html> (não por prefers-color-scheme puro). */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-heading: "Konkhmer Sleokchher", sans-serif;
+  --font-body: "Kedebideri", sans-serif;
+
+  /*
+   * Escala tipográfica.
+   *
+   * Dois degraus abaixo de `text-xs` para legendas e texto auxiliar, no lugar
+   * dos valores arbitrários (text-[9px], text-[10px], text-[11px]) que estavam
+   * espalhados pelas páginas. Uso pretendido:
+   *
+   *   text-micro (10px) — rótulos de campo, timestamps, legendas de eixo
+   *   text-meta  (11px) — descrições secundárias, linha de apoio de um item
+   *   text-xs    (12px) — corpo padrão: tabelas, botões, formulários
+   *   text-sm    (14px) — títulos de card
+   *   text-xl    (20px) — título de página
+   *   text-2xl   (24px) — valores de KPI
+   */
+  --text-micro: 0.625rem;
+  --text-micro--line-height: 1.45;
+  --text-meta: 0.6875rem;
+  --text-meta--line-height: 1.5;
+
+  --color-brand-navy: #0c0c3a;
+  --color-brand-dark: #1a1b63;
+  --color-brand-blue: #003a8c;
+  --color-brand-blue-dark: #002d6e;
+  --color-brand-bright: #00a9e6;
+  --color-brand-text: #102033;
+  --color-brand-card: #ffffff;
+  --color-brand-surface: #f0f4fa;
+}
+
+/*
+ * No escuro, trocamos os tokens da marca e a escala gray usada no chrome
+ * (bordas, hovers, texto secundário). Não remapeamos `white`: `text-white`
+ * em botões/header precisa continuar branco.
+ */
+html.dark {
+  --color-brand-text: #e8eef6;
+  --color-brand-card: #151d2e;
+  --color-brand-surface: #0b1220;
+  --color-brand-blue: #3b82f6;
+  --color-brand-blue-dark: #2563eb;
+
+  --color-gray-50: #1a2335;
+  --color-gray-100: #243044;
+  --color-gray-200: #334155;
+  --color-gray-300: #475569;
+  --color-gray-400: #94a3b8;
+  --color-gray-500: #a8b4c7;
+  --color-gray-600: #cbd5e1;
+
+  --color-green-50: #132a1c;
+  --color-green-100: #1a3a26;
+  --color-red-50: #3a1518;
+  --color-red-100: #4a1c20;
+  --color-amber-50: #3a2a12;
+  --color-blue-50: #152338;
+  --color-orange-50: #3a2412;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Kedebideri", sans-serif;
+  color: var(--color-brand-text);
+  background: var(--color-brand-surface);
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 58, 140, 0.3);
+  border-radius: 2px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 58, 140, 0.6);
+}
+
+html.dark ::-webkit-scrollbar-thumb {
+  background: rgba(59, 130, 246, 0.35);
+}
+html.dark ::-webkit-scrollbar-thumb:hover {
+  background: rgba(59, 130, 246, 0.6);
+}

@@ -1,0 +1,56 @@
+import { useEffect, useState } from "react";
+import { translate } from "@/i18n/translate";
+import { DadosIndisponiveisError } from "./types";
+
+export interface EstadoDados<T> {
+  data: T | null;
+  loading: boolean;
+  /** Mensagem pronta para exibição, ou `null` se deu tudo certo. */
+  error: string | null;
+  /** Sugestão de como resolver, quando o erro traz uma. */
+  sugestao: string | null;
+}
+
+/**
+ * Roda um carregador do `repository` e devolve `{ data, loading, error }`.
+ *
+ * Uso:
+ *
+ *     const { data, loading, error } = useDataset(getKpis);
+ *
+ * `carregar` precisa ser estável entre renders — passe uma função de módulo ou
+ * envolva num `useCallback`.
+ */
+export default function useDataset<T>(carregar: () => Promise<T>): EstadoDados<T> {
+  const [estado, setEstado] = useState<EstadoDados<T>>({
+    data: null,
+    loading: true,
+    error: null,
+    sugestao: null,
+  });
+
+  useEffect(() => {
+    let ativo = true;
+
+    setEstado({ data: null, loading: true, error: null, sugestao: null });
+
+    carregar()
+      .then((data) => {
+        if (!ativo) return;
+        setEstado({ data, loading: false, error: null, sugestao: null });
+      })
+      .catch((err: unknown) => {
+        if (!ativo) return;
+        const error =
+          err instanceof Error ? err.message : translate("errors.genericTitle");
+        const sugestao = err instanceof DadosIndisponiveisError ? err.sugestao : null;
+        setEstado({ data: null, loading: false, error, sugestao });
+      });
+
+    return () => {
+      ativo = false;
+    };
+  }, [carregar]);
+
+  return estado;
+}
