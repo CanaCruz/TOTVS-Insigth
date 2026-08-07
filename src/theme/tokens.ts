@@ -6,7 +6,7 @@
  * `bg-brand-blue`, `text-brand-text`, `bg-brand-card`, etc. Prefira esses
  * utilitários no JSX. O modo escuro remapeia os tokens em `html.dark`.
  *
- * Preferência de tema: `src/theme/ThemeContext.tsx`.
+ * Preferência claro/escuro: `ThemeContext.tsx` neste mesmo diretório.
  *
  * Este arquivo guarda apenas o que não vira utilitário — os gradientes.
  */

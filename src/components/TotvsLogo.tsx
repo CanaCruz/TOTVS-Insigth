@@ -1,4 +1,4 @@
-import logoUrl from "@/imports/totvs-logo.png";
+import logoUrl from "@/assets/totvs-logo.png";
 
 /*
  * PONTO ÚNICO DE TROCA DA LOGO
@@ -6,13 +6,12 @@ import logoUrl from "@/imports/totvs-logo.png";
  * Toda a aplicação (sidebar, telas de login, preloader) renderiza a logo por
  * aqui. Para trocar pelo arquivo oficial, basta substituir o import acima:
  *
- *     import logoUrl from "@/imports/totvs-logo.svg";
+ *     import logoUrl from "@/assets/totvs-logo.svg";
  *
  * O Vite resolve .svg e .png da mesma forma (retorna a URL do asset), então
  * nenhum outro arquivo precisa mudar.
  *
- * A logo atual é o símbolo TOTVS em 192x192 que já vinha no export do Figma
- * (`imports/LoginEAcesso/98477ab…png`), promovido a asset nomeado.
+ * Arquivo local em `src/assets/totvs-logo.png` (não depende da Figma).
  */
 
 export interface TotvsLogoProps {

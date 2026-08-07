@@ -34,13 +34,15 @@ This is the canonical project structure. Start with task-relevant files below. O
 - `src/components/` - `ui/` primitives, `auth/` layout pieces, `layout/` chrome (Sidebar, Header, UserDropdown)
 - `src/icons/index.tsx` - All SVG icons as `currentColor` components
 - `src/data/` - Typed data access; see "Data layer" below
-- `src/theme.ts`, `src/navigation.ts`, `src/format.ts` - Gradients and sidebar width, route types, display formatting
+- `src/theme/` - Gradientes/`SIDEBAR_WIDTH` (`tokens.ts`) e modo claro/escuro (`ThemeContext.tsx`)
+- `src/navigation.ts`, `src/format.ts` - Tipos de rota e formatação de exibição
 - `src/index.css` - `@font-face` rules for the self-hosted fonts, Tailwind import, and the `@theme` block (brand colors, font families, type scale)
-- `src/assets/fonts/` - The three font files the app ships. Konkhmer Sleokchher is the Latin-subset woff2 (19 KB, not the 624 KB full file); Kedebideri 400/500 are TrueType
+- `src/assets/` - Logo (`totvs-logo.png`) e fontes em `fonts/`
 - `index.html` - Plain HTML shell: title, description, `noindex`, favicon
 - `public/` - Copied verbatim into `dist/`: `robots.txt`, `favicon.png`, and generated `data/`
-- `scripts/build-data.mjs` - Turns the raw NDJSON dump into the artifacts under `public/data/`
-- `package.json` - Dependencies and scripts (`dev`, `build`, `typecheck`, `data:build`, `data:build:publico`, `format`)
+- `docs/` - Site estático para GitHub Pages (gerado por `pnpm pages:prepare`)
+- `scripts/build-data.mjs`, `scripts/prepare-pages.mjs` - Dados e cópia `dist/` → `docs/`
+- `package.json` - Dependencies and scripts (`dev`, `build`, `typecheck`, `data:build`, `data:build:publico`, `pages:prepare`, `format`)
 - `vite.config.ts` - Minimal Vite config: React, Tailwind v4, and the `@` → `src` alias
 - `vercel.json`, `DEPLOY.md` - Deploy configuration and its safety constraints
 - `.mise.toml` - Toolchain versions for Node.js and pnpm
