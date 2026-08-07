@@ -1,5 +1,5 @@
 {
-  "name": "figma-make-app",
+  "name": "totvs-insight",
   "private": true,
   "version": "1.0.0",
   "type": "module",
@@ -9,6 +9,7 @@
     "data:build:publico": "node scripts/build-data.mjs --sem-transcricoes",
     "typecheck": "tsc --noEmit",
     "build": "vite build",
+    "build:pages": "vite build --base=./",
     "preview": "vite preview",
     "format": "oxfmt"
   },

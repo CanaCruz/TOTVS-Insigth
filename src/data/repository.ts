@@ -23,8 +23,9 @@ import {
   type TranscricaoCompleta,
 } from "./types";
 
-const INDICE_URL = "/data/meetings-index.json";
-const TRANSCRICAO_URL = (id: string) => `/data/transcricoes/${id}.json`;
+const BASE = import.meta.env.BASE_URL;
+const INDICE_URL = `${BASE}data/meetings-index.json`;
+const TRANSCRICAO_URL = (id: string) => `${BASE}data/transcricoes/${id}.json`;
 
 /** Campos que precisam existir em cada reunião para as telas funcionarem. */
 const CAMPOS_ESPERADOS: (keyof Reuniao)[] = [
