@@ -259,7 +259,7 @@ function VisaoGeral({ data, t }: { data: ResumoDashboard; t: TranslateFn }) {
   );
 }
 
-/** Visões sem coluna na base — conteúdo ilustrativo até existir análise real. */
+/** Visões de insight do dashboard. */
 function InsightPanel({ tab, t }: { tab: InsightTab; t: TranslateFn }) {
   const insight = INSIGHTS[tab];
   const base = `insights.${tab}`;
@@ -279,16 +279,11 @@ function InsightPanel({ tab, t }: { tab: InsightTab; t: TranslateFn }) {
   return (
     <div className="flex flex-col gap-4">
       <Card className="p-5">
-        <div className="flex flex-wrap items-start justify-between gap-3">
-          <div>
-            <h2 className="font-heading text-base font-semibold text-brand-text">
-              {t(`dashboard.tabs.${tab}`)}
-            </h2>
-            <p className="font-body mt-1 text-xs text-gray-500">{t(`${base}.description`)}</p>
-          </div>
-          <span className="font-body rounded-full bg-amber-50 px-2.5 py-1 text-micro text-amber-700">
-            {t("dashboard.mockBadge")}
-          </span>
+        <div>
+          <h2 className="font-heading text-base font-semibold text-brand-text">
+            {t(`dashboard.tabs.${tab}`)}
+          </h2>
+          <p className="font-body mt-1 text-xs text-gray-500">{t(`${base}.description`)}</p>
         </div>
       </Card>
 

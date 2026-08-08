@@ -11,10 +11,12 @@ import {
   GridIcon,
   QueueIcon,
   SettingsIcon,
+  UsersIcon,
 } from "@/icons";
 
 const NAV_IDS: { id: NavId; key: string; icon: React.ReactNode }[] = [
   { id: "dashboard", key: "nav.dashboard", icon: <GridIcon /> },
+  { id: "clientes", key: "nav.clients", icon: <UsersIcon /> },
   { id: "transcricoes", key: "nav.transcripts", icon: <FileTextIcon /> },
   { id: "fila", key: "nav.queue", icon: <QueueIcon /> },
   { id: "historico", key: "nav.history", icon: <ClockIcon /> },

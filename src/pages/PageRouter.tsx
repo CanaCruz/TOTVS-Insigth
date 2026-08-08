@@ -1,6 +1,7 @@
 import type { NavId } from "@/navigation";
 import AjudaPage from "./AjudaPage";
 import AssistentePage from "./AssistentePage";
+import ClientesPage from "./ClientesPage";
 import ConfiguracoesPage from "./ConfiguracoesPage";
 import DashboardContent from "./DashboardContent";
 import FilaPage from "./FilaPage";
@@ -17,6 +18,8 @@ export default function PageRouter({
   onNav: (id: NavId) => void;
 }) {
   switch (activeNav) {
+    case "clientes":
+      return <ClientesPage />;
     case "transcricoes":
       return <TranscricoesPage />;
     case "fila":

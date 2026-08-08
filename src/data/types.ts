@@ -106,6 +106,39 @@ export interface ResumoNps {
   score: number | null;
 }
 
+/**
+ * Um cliente, agregado a partir das reuniões que compartilham o mesmo `CODT`.
+ *
+ * Não existe cadastro de clientes na origem — o `CODT` é o único identificador,
+ * e tudo aqui é derivado das reuniões dele.
+ */
+export interface Cliente {
+  /** `CODT` — código anonimizado. É o nome que temos. */
+  codt: string;
+  reunioes: number;
+  segundosTotais: number;
+  /** Da mais antiga para a mais recente. */
+  primeiraReuniao: string;
+  ultimaReuniao: string;
+  /** Campos do cliente, tirados da reunião mais recente que os informa. */
+  unidade: string | null;
+  segmento: string | null;
+  uf: string | null;
+  faixaFaturamento: string | null;
+  /** NPS: presente em ~26% das reuniões, então pode ser nulo mesmo com histórico. */
+  npsUltimo: number | null;
+  npsMedia: number | null;
+  /** Quantas reuniões dele têm nota. */
+  npsRespostas: number;
+}
+
+/** Cliente com a lista completa de reuniões, para a tela de detalhe. */
+export interface DetalheCliente {
+  cliente: Cliente;
+  /** Da mais recente para a mais antiga. */
+  reunioes: Reuniao[];
+}
+
 /** Erro de carga com mensagem pronta para exibição. */
 export class DadosIndisponiveisError extends Error {
   constructor(

@@ -16,6 +16,8 @@ import { translate } from "@/i18n/translate";
 import { getTextoUpload, listarUploads } from "./sessionUploads";
 import {
   DadosIndisponiveisError,
+  type Cliente,
+  type DetalheCliente,
   type Fatia,
   type IndiceReunioes,
   type Kpi,
@@ -376,5 +378,78 @@ export async function getResumoDashboard(): Promise<ResumoDashboard> {
     porSegmento: distribuirPor(reunioes, "segmento", 6),
     porUf: distribuirPor(reunioes, "uf", 6),
     porUnidade: distribuirPor(reunioes, "unidade", 5),
+  };
+}
+
+// ─── Clientes ────────────────────────────────────────────────────────────────
+
+/**
+ * Agrupa as reuniões por `CODT`.
+ *
+ * Não há cadastro de clientes na origem: o cliente é uma projeção das reuniões
+ * que compartilham o código. Campos como unidade e segmento são esparsos (~64%
+ * de cobertura), então pegamos o valor da reunião mais recente que o informa em
+ * vez de simplesmente ler a primeira.
+ */
+function agruparClientes(reunioes: Reuniao[]): Cliente[] {
+  const porCodt = new Map<string, Reuniao[]>();
+
+  for (const r of reunioes) {
+    const lista = porCodt.get(r.codt);
+    if (lista) lista.push(r);
+    else porCodt.set(r.codt, [r]);
+  }
+
+  const clientes: Cliente[] = [];
+
+  for (const [codt, lista] of porCodt) {
+    // Mais recente primeiro — o índice já vem ordenado, mas uploads entram no topo.
+    const ordenadas = [...lista].sort((a, b) => b.data.localeCompare(a.data));
+
+    /** Primeiro valor não nulo, varrendo da reunião mais recente para trás. */
+    const maisRecente = <K extends keyof Reuniao>(campo: K): Reuniao[K] | null => {
+      for (const r of ordenadas) {
+        const v = r[campo];
+        if (v !== null && v !== undefined && v !== "") return v;
+      }
+      return null;
+    };
+
+    const notas = ordenadas.map((r) => r.nps).filter((n): n is number => n !== null);
+
+    clientes.push({
+      codt,
+      reunioes: ordenadas.length,
+      segundosTotais: ordenadas.reduce((s, r) => s + r.duracaoSegundos, 0),
+      primeiraReuniao: ordenadas[ordenadas.length - 1].data,
+      ultimaReuniao: ordenadas[0].data,
+      unidade: maisRecente("unidade") as string | null,
+      segmento: maisRecente("segmento") as string | null,
+      uf: maisRecente("uf") as string | null,
+      faixaFaturamento: maisRecente("faixaFaturamento") as string | null,
+      npsUltimo: notas.length > 0 ? notas[0] : null,
+      npsMedia: notas.length > 0 ? notas.reduce((s, n) => s + n, 0) / notas.length : null,
+      npsRespostas: notas.length,
+    });
+  }
+
+  // Mais reuniões primeiro: a distribuição é bem torta (1 cliente com 116,
+  // a maioria com 1–3), então volume é a ordenação útil por padrão.
+  return clientes.sort((a, b) => b.reunioes - a.reunioes || b.segundosTotais - a.segundosTotais);
+}
+
+/** Todos os clientes, do que teve mais reuniões para o que teve menos. */
+export async function getClientes(): Promise<Cliente[]> {
+  return agruparClientes(await getReunioes());
+}
+
+/** Um cliente e o histórico completo dele. `null` se o código não existir. */
+export async function getDetalheCliente(codt: string): Promise<DetalheCliente | null> {
+  const reunioes = (await getReunioes()).filter((r) => r.codt === codt);
+  if (reunioes.length === 0) return null;
+
+  return {
+    cliente: agruparClientes(reunioes)[0],
+    reunioes: [...reunioes].sort((a, b) => b.data.localeCompare(a.data)),
   };
 }

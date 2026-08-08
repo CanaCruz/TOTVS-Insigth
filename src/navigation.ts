@@ -1,6 +1,7 @@
 /** Páginas alcançáveis dentro do dashboard. */
 export type NavId =
   | "dashboard"
+  | "clientes"
   | "transcricoes"
   | "fila"
   | "historico"
