@@ -21,6 +21,10 @@ export interface EstadoDados<T> {
  *
  * `carregar` precisa ser estável entre renders — passe uma função de módulo ou
  * envolva num `useCallback`. Reage também a uploads locais da sessão.
+ *
+ * Em refresh por upload, mantém os dados anteriores na tela (sem “piscar”
+ * loading) — no Pages isso fazia o botão/lista sumirem e o drawer parecer
+ * quebrado.
  */
 export default function useDataset<T>(carregar: () => Promise<T>): EstadoDados<T> {
   const [estado, setEstado] = useState<EstadoDados<T>>({
@@ -36,7 +40,12 @@ export default function useDataset<T>(carregar: () => Promise<T>): EstadoDados<T
   useEffect(() => {
     let ativo = true;
 
-    setEstado({ data: null, loading: true, error: null, sugestao: null });
+    setEstado((prev) => ({
+      data: prev.data,
+      loading: prev.data === null,
+      error: null,
+      sugestao: null,
+    }));
 
     carregar()
       .then((data) => {

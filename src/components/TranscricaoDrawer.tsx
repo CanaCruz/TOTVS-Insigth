@@ -8,11 +8,18 @@ import { capitalizar, formatarDataHora, formatarDuracao, formatarFaixa, ouTraco 
 import { ErrorState } from "@/components/ui/DataState";
 
 /**
- * Busca o texto, mas só depois de confirmar que ele foi publicado — ou se
- * veio de um upload local da sessão.
+ * Busca o texto: prioriza `textoLocal` (upload da sessão), depois store em
+ * memória, depois arquivo publicado. No Pages o build público não tem
+ * `transcricoes/` — sem o atalho local o painel mostraria “não publicado”
+ * mesmo depois do upload.
  */
-async function carregarTexto(id: string): Promise<TranscricaoCompleta | null> {
-  if (getTextoUpload(id) !== undefined) return getTranscricao(id);
+async function carregarTexto(
+  id: string,
+  textoLocal?: string,
+): Promise<TranscricaoCompleta | null> {
+  if (textoLocal !== undefined) return { id, texto: textoLocal };
+  const emMemoria = getTextoUpload(id);
+  if (emMemoria !== undefined) return { id, texto: emMemoria };
   if (!(await transcricoesDisponiveis())) return null;
   return getTranscricao(id);
 }
@@ -26,12 +33,18 @@ async function carregarTexto(id: string): Promise<TranscricaoCompleta | null> {
 export default function TranscricaoDrawer({
   reuniao,
   onClose,
+  /** Texto já lido no upload — evita depender só do store em memória. */
+  textoLocal,
 }: {
   reuniao: Reuniao;
   onClose: () => void;
+  textoLocal?: string;
 }) {
   const { t } = useLocale();
-  const carregar = useCallback(() => carregarTexto(reuniao.id), [reuniao.id]);
+  const carregar = useCallback(
+    () => carregarTexto(reuniao.id, textoLocal),
+    [reuniao.id, textoLocal],
+  );
   const { data, loading, error, sugestao } = useDataset<TranscricaoCompleta | null>(carregar);
 
   useEffect(() => {
@@ -68,7 +81,6 @@ export default function TranscricaoDrawer({
         aria-label={t("drawer.aria", { id: reuniao.id })}
         className="relative flex h-full w-full max-w-2xl flex-col bg-brand-card shadow-2xl"
       >
-        {/* Cabeçalho */}
         <div className="flex items-start justify-between gap-4 border-b border-gray-100 px-6 py-5">
           <div className="min-w-0">
             <p className="font-body text-meta text-brand-blue">
@@ -87,7 +99,6 @@ export default function TranscricaoDrawer({
           </button>
         </div>
 
-        {/* Metadados */}
         <div className="grid grid-cols-2 gap-x-6 gap-y-3 border-b border-gray-100 px-6 py-4 sm:grid-cols-3">
           {meta.map((m) => (
             <div key={m.label} className="min-w-0">
@@ -97,7 +108,6 @@ export default function TranscricaoDrawer({
           ))}
         </div>
 
-        {/* Transcrição */}
         <div className="flex-1 overflow-y-auto px-6 py-5">
           {loading && (
             <div className="flex flex-col items-center gap-3 py-16">
@@ -111,7 +121,6 @@ export default function TranscricaoDrawer({
 
           {error && <ErrorState error={error} sugestao={sugestao} />}
 
-          {/* Build publicado sem os textos — ausência intencional, não falha. */}
           {!loading && !error && data === null && (
             <div className="rounded-xl border border-gray-100 bg-gray-50 px-6 py-10 text-center">
               <p className="font-heading text-sm font-semibold text-brand-text">

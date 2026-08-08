@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useRef, useState } from "react";
 import { getReunioes } from "@/data/repository";
-import { adicionarUpload, parseArquivoUpload } from "@/data/sessionUploads";
+import { adicionarUpload, getTextoUpload, parseArquivoUpload } from "@/data/sessionUploads";
 import useDataset from "@/data/useDataset";
 import type { Reuniao } from "@/data/types";
 import { useLocale } from "@/i18n/useLocale";
@@ -54,6 +54,8 @@ export default function TranscricoesPage() {
   const [uf, setUf] = useState(ALL_UF);
   const [pagina, setPagina] = useState(0);
   const [aberta, setAberta] = useState<Reuniao | null>(null);
+  /** Texto do upload aberto no drawer (Pages não tem arquivos de transcrição). */
+  const [textoLocalAberto, setTextoLocalAberto] = useState<string | undefined>(undefined);
   const [uploadMsg, setUploadMsg] = useState<string | null>(null);
   const [uploadErro, setUploadErro] = useState<string | null>(null);
   const [enviando, setEnviando] = useState(false);
@@ -102,6 +104,7 @@ export default function TranscricoesPage() {
       adicionarUpload(upload);
       setUploadMsg(t("transcripts.uploadOk", { id: upload.reuniao.id }));
       setPagina(0);
+      setTextoLocalAberto(upload.texto);
       setAberta(upload.reuniao);
     } catch (err) {
       const msg = err instanceof Error ? err.message : t("transcripts.uploadFail");
@@ -219,7 +222,10 @@ export default function TranscricoesPage() {
                       {visiveis.map((r, i) => (
                         <tr
                           key={r.id}
-                          onClick={() => setAberta(r)}
+                          onClick={() => {
+                            setTextoLocalAberto(getTextoUpload(r.id));
+                            setAberta(r);
+                          }}
                           className={`cursor-pointer border-b border-gray-50 transition-colors hover:bg-blue-50/40 ${
                             i % 2 === 0 ? "" : "bg-gray-50/40"
                           }`}
@@ -301,7 +307,16 @@ export default function TranscricoesPage() {
         </>
       )}
 
-      {aberta && <TranscricaoDrawer reuniao={aberta} onClose={() => setAberta(null)} />}
+      {aberta && (
+        <TranscricaoDrawer
+          reuniao={aberta}
+          textoLocal={textoLocalAberto}
+          onClose={() => {
+            setAberta(null);
+            setTextoLocalAberto(undefined);
+          }}
+        />
+      )}
     </div>
   );
 }
