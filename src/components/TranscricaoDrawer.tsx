@@ -1,5 +1,6 @@
 import { useCallback, useEffect } from "react";
 import { getTranscricao, transcricoesDisponiveis } from "@/data/repository";
+import { getTextoUpload } from "@/data/sessionUploads";
 import useDataset from "@/data/useDataset";
 import type { Reuniao, TranscricaoCompleta } from "@/data/types";
 import { useLocale } from "@/i18n/useLocale";
@@ -7,14 +8,11 @@ import { capitalizar, formatarDataHora, formatarDuracao, formatarFaixa, ouTraco 
 import { ErrorState } from "@/components/ui/DataState";
 
 /**
- * Busca o texto, mas só depois de confirmar que ele foi publicado.
- *
- * Builds gerados com `--sem-transcricoes` trazem apenas metadados; sem esta
- * checagem o painel tentaria buscar um arquivo inexistente e mostraria um erro
- * de "não encontrado" que sugere um problema de build, quando na verdade a
- * omissão foi intencional.
+ * Busca o texto, mas só depois de confirmar que ele foi publicado — ou se
+ * veio de um upload local da sessão.
  */
 async function carregarTexto(id: string): Promise<TranscricaoCompleta | null> {
+  if (getTextoUpload(id) !== undefined) return getTranscricao(id);
   if (!(await transcricoesDisponiveis())) return null;
   return getTranscricao(id);
 }

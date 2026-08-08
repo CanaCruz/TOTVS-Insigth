@@ -1,5 +1,6 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { getReunioes } from "@/data/repository";
+import { adicionarUpload, parseArquivoUpload } from "@/data/sessionUploads";
 import useDataset from "@/data/useDataset";
 import type { Reuniao } from "@/data/types";
 import { useLocale } from "@/i18n/useLocale";
@@ -47,11 +48,15 @@ function npsClass(nps: number) {
 
 export default function TranscricoesPage() {
   const { t } = useLocale();
+  const fileRef = useRef<HTMLInputElement>(null);
   const [search, setSearch] = useState("");
   const [segmento, setSegmento] = useState(ALL_SEGMENTO);
   const [uf, setUf] = useState(ALL_UF);
   const [pagina, setPagina] = useState(0);
   const [aberta, setAberta] = useState<Reuniao | null>(null);
+  const [uploadMsg, setUploadMsg] = useState<string | null>(null);
+  const [uploadErro, setUploadErro] = useState<string | null>(null);
+  const [enviando, setEnviando] = useState(false);
 
   const { data, loading, error, sugestao } = useDataset<Reuniao[]>(
     useCallback(() => getReunioes(), []),
@@ -79,12 +84,32 @@ export default function TranscricoesPage() {
   const paginaAtual = Math.min(pagina, Math.max(totalPaginas - 1, 0));
   const visiveis = filtradas.slice(paginaAtual * POR_PAGINA, (paginaAtual + 1) * POR_PAGINA);
 
-  /** Qualquer mudança de filtro volta para a primeira página. */
   function aoFiltrar<T>(setter: (v: T) => void) {
     return (valor: T) => {
       setter(valor);
       setPagina(0);
     };
+  }
+
+  async function aoEscolherArquivo(file: File | null) {
+    if (!file) return;
+    setUploadErro(null);
+    setUploadMsg(null);
+    setEnviando(true);
+    try {
+      const texto = await file.text();
+      const upload = parseArquivoUpload(file.name, texto);
+      adicionarUpload(upload);
+      setUploadMsg(t("transcripts.uploadOk", { id: upload.reuniao.id }));
+      setPagina(0);
+      setAberta(upload.reuniao);
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : t("transcripts.uploadFail");
+      setUploadErro(msg);
+    } finally {
+      setEnviando(false);
+      if (fileRef.current) fileRef.current.value = "";
+    }
   }
 
   return (
@@ -96,7 +121,6 @@ export default function TranscricoesPage() {
 
       {data && (
         <>
-          {/* Barra de ferramentas */}
           <div className="mb-5 flex flex-wrap gap-3">
             <div className="relative min-w-48 flex-1">
               <span className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-gray-400">
@@ -139,11 +163,35 @@ export default function TranscricoesPage() {
               ))}
             </select>
 
-            <button className="font-heading flex items-center gap-2 rounded-lg bg-brand-blue px-4 py-2 text-xs text-white transition-colors hover:bg-brand-blue-dark">
+            <input
+              ref={fileRef}
+              type="file"
+              accept=".txt,.json,text/plain,application/json"
+              className="hidden"
+              onChange={(e) => void aoEscolherArquivo(e.target.files?.[0] ?? null)}
+            />
+            <button
+              type="button"
+              disabled={enviando}
+              onClick={() => fileRef.current?.click()}
+              title={t("transcripts.uploadHint")}
+              className="font-heading flex items-center gap-2 rounded-lg bg-brand-blue px-4 py-2 text-xs text-white transition-colors hover:bg-brand-blue-dark disabled:opacity-60"
+            >
               <UploadIcon size={13} />
-              {t("transcripts.upload")}
+              {enviando ? t("transcripts.uploading") : t("transcripts.upload")}
             </button>
           </div>
+
+          {uploadMsg && (
+            <p className="font-body mb-3 rounded-lg bg-emerald-50 px-3 py-2 text-meta text-emerald-700">
+              {uploadMsg}
+            </p>
+          )}
+          {uploadErro && (
+            <p className="font-body mb-3 rounded-lg bg-red-50 px-3 py-2 text-meta text-red-600">
+              {uploadErro}
+            </p>
+          )}
 
           {filtradas.length === 0 ? (
             <EmptyState
@@ -219,7 +267,6 @@ export default function TranscricoesPage() {
                 </div>
               </Card>
 
-              {/* Paginação */}
               <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
                 <p className="font-body text-meta text-gray-500">
                   {t("transcripts.pagination", {

@@ -13,6 +13,7 @@
 
 import { getActiveLocale } from "@/i18n/types";
 import { translate } from "@/i18n/translate";
+import { getTextoUpload, listarUploads } from "./sessionUploads";
 import {
   DadosIndisponiveisError,
   type Fatia,
@@ -129,9 +130,13 @@ export function getIndice(): Promise<IndiceReunioes> {
   return indicePromise;
 }
 
-/** Todas as reuniões, da mais recente para a mais antiga. */
+/** Todas as reuniões, da mais recente para a mais antiga (uploads locais no topo). */
 export async function getReunioes(): Promise<Reuniao[]> {
-  return (await getIndice()).reunioes;
+  const base = (await getIndice()).reunioes;
+  const extras = listarUploads().map((u) => u.reuniao);
+  if (extras.length === 0) return base;
+  const ids = new Set(extras.map((r) => r.id));
+  return [...extras, ...base.filter((r) => !ids.has(r.id))];
 }
 
 /**
@@ -151,9 +156,13 @@ export async function getReunioesRecentes(n = 5): Promise<Reuniao[]> {
 
 /**
  * Texto completo de uma reunião. Cada transcrição vive num arquivo próprio e é
- * buscada só quando alguém realmente abre a reunião.
+ * buscada só quando alguém realmente abre a reunião. Uploads da sessão têm
+ * prioridade sobre o disco.
  */
 export async function getTranscricao(id: string): Promise<TranscricaoCompleta> {
+  const local = getTextoUpload(id);
+  if (local !== undefined) return { id, texto: local };
+
   let resposta: Response;
   try {
     resposta = await fetch(TRANSCRICAO_URL(id));

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { translate } from "@/i18n/translate";
+import { onUploadsChange } from "./sessionUploads";
 import { DadosIndisponiveisError } from "./types";
 
 export interface EstadoDados<T> {
@@ -19,7 +20,7 @@ export interface EstadoDados<T> {
  *     const { data, loading, error } = useDataset(getKpis);
  *
  * `carregar` precisa ser estável entre renders — passe uma função de módulo ou
- * envolva num `useCallback`.
+ * envolva num `useCallback`. Reage também a uploads locais da sessão.
  */
 export default function useDataset<T>(carregar: () => Promise<T>): EstadoDados<T> {
   const [estado, setEstado] = useState<EstadoDados<T>>({
@@ -28,6 +29,9 @@ export default function useDataset<T>(carregar: () => Promise<T>): EstadoDados<T
     error: null,
     sugestao: null,
   });
+  const [tick, setTick] = useState(0);
+
+  useEffect(() => onUploadsChange(() => setTick((n) => n + 1)), []);
 
   useEffect(() => {
     let ativo = true;
@@ -41,8 +45,7 @@ export default function useDataset<T>(carregar: () => Promise<T>): EstadoDados<T
       })
       .catch((err: unknown) => {
         if (!ativo) return;
-        const error =
-          err instanceof Error ? err.message : translate("errors.genericTitle");
+        const error = err instanceof Error ? err.message : translate("errors.genericTitle");
         const sugestao = err instanceof DadosIndisponiveisError ? err.sugestao : null;
         setEstado({ data: null, loading: false, error, sugestao });
       });
@@ -50,7 +53,7 @@ export default function useDataset<T>(carregar: () => Promise<T>): EstadoDados<T
     return () => {
       ativo = false;
     };
-  }, [carregar]);
+  }, [carregar, tick]);
 
   return estado;
 }
