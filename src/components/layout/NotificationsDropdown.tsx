@@ -82,7 +82,7 @@ export default function NotificationsDropdown() {
       {/* Painel */}
       <div
         role="menu"
-        className="absolute top-full right-0 z-50 mt-2 w-80 overflow-hidden rounded-2xl border border-gray-100 bg-brand-card shadow-xl"
+        className="absolute top-full right-0 z-50 mt-2 w-[min(20rem,calc(100vw-1.5rem))] overflow-hidden rounded-2xl border border-gray-100 bg-brand-card shadow-xl"
         style={{
           opacity: open ? 1 : 0,
           transform: open ? "translateY(0) scale(1)" : "translateY(-8px) scale(0.97)",

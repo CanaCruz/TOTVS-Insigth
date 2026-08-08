@@ -53,6 +53,8 @@ const ptBR: Dict = {
     searchAria: "Buscar",
     themeToLight: "Usar modo claro",
     themeToDark: "Usar modo escuro",
+    openMenu: "Abrir menu",
+    closeMenu: "Fechar menu",
   },
   userMenu: {
     profile: "Meu perfil",

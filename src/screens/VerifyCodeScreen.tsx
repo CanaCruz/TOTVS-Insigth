@@ -38,10 +38,10 @@ export default function VerifyCodeScreen({ onNav }: { onNav: (screen: AuthScreen
       <AuthCard wide>
         <AuthLeftPanel subtitle={t("auth.verifySubtitle")} />
 
-        <div className="flex flex-1 flex-col gap-5 p-8">
+        <div className="flex flex-1 flex-col gap-5 p-5 sm:p-8">
           <AuthHeading icon={<ShieldCheckIcon size={28} />} title={t("auth.verifyTitle")} />
 
-          <div className="flex justify-center gap-2">
+          <div className="flex justify-center gap-1.5 sm:gap-2">
             {digits.map((digit, i) => (
               <input
                 key={i}
@@ -55,7 +55,7 @@ export default function VerifyCodeScreen({ onNav }: { onNav: (screen: AuthScreen
                 aria-label={t("auth.verifyDigit", { i: i + 1, n: CODE_LENGTH })}
                 onChange={(e) => handleDigit(i, e.target.value)}
                 onKeyDown={(e) => handleKeyDown(i, e)}
-                className="font-heading h-12 w-11 rounded-lg border-2 border-gray-300 text-center text-lg font-bold text-brand-text transition-all outline-none focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/20"
+                className="font-heading h-11 w-9 rounded-lg border-2 border-gray-300 text-center text-base font-bold text-brand-text transition-all outline-none focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/20 sm:h-12 sm:w-11 sm:text-lg"
               />
             ))}
           </div>

@@ -30,7 +30,7 @@ export default function NewPasswordScreen({ onNav }: { onNav: (screen: AuthScree
       <AuthCard wide>
         <AuthLeftPanel subtitle={t("auth.newPassSubtitle")} />
 
-        <div className="flex flex-1 flex-col gap-5 p-8">
+        <div className="flex flex-1 flex-col gap-5 p-5 sm:p-8">
           <AuthHeading icon={<LockIcon size={26} />} title={t("auth.newPassTitle")} />
 
           <InputField

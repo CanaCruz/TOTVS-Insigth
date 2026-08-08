@@ -17,7 +17,7 @@ export default function ForgotScreen({ onNav }: { onNav: (screen: AuthScreen) =>
       <AuthCard wide>
         <AuthLeftPanel subtitle={t("auth.forgotSubtitle")} />
 
-        <div className="flex flex-1 flex-col gap-5 p-8">
+        <div className="flex flex-1 flex-col gap-5 p-5 sm:p-8">
           <AuthHeading icon={<MailIcon size={28} />} title={t("auth.forgotTitle")} />
 
           <InputField

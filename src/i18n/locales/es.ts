@@ -52,6 +52,8 @@ const es: Dict = {
     searchAria: "Buscar",
     themeToLight: "Usar modo claro",
     themeToDark: "Usar modo oscuro",
+    openMenu: "Abrir menú",
+    closeMenu: "Cerrar menú",
   },
   userMenu: {
     profile: "Mi perfil",

@@ -6,6 +6,7 @@ import {
   BarChartIcon,
   ChatIcon,
   ClockIcon,
+  CloseIcon,
   FileTextIcon,
   GridIcon,
   QueueIcon,
@@ -26,42 +27,73 @@ export interface SidebarProps {
   active: NavId;
   onNav: (id: NavId) => void;
   onLogout: () => void;
-  collapsed: boolean;
+  /**
+   * Desktop (`dock`): anima a largura para 0 quando fechado.
+   * Mobile (`drawer`): mantém a largura e desliza para fora da tela.
+   */
+  open: boolean;
+  mode: "dock" | "drawer";
+  /** Fecha o drawer (só mobile). */
+  onClose?: () => void;
 }
 
 /**
- * Menu lateral fixo.
+ * Menu lateral.
  *
- * O botão de recolher NÃO vive aqui: como este contêiner usa `overflow:hidden`
- * para animar a largura, qualquer filho posicionado fora dos seus limites seria
- * recortado. O botão é renderizado pelo `DashboardScreen`, flutuando por cima.
+ * O botão de recolher do desktop NÃO vive aqui: o contêiner em modo `dock`
+ * usa `overflow:hidden` para animar a largura. No mobile (`drawer`) o menu
+ * sobe como overlay e o Header controla abertura/fechamento.
  */
-export default function Sidebar({ active, onNav, onLogout, collapsed }: SidebarProps) {
+export default function Sidebar({ active, onNav, onLogout, open, mode, onClose }: SidebarProps) {
   const { t } = useLocale();
+  const isDrawer = mode === "drawer";
+
+  function navigate(id: NavId) {
+    onNav(id);
+    if (isDrawer) onClose?.();
+  }
 
   return (
     <aside
-      className="fixed top-0 left-0 z-20 flex h-screen flex-shrink-0 flex-col overflow-hidden"
+      className={`fixed top-0 left-0 flex h-screen flex-shrink-0 flex-col overflow-hidden ${
+        isDrawer ? "z-40 shadow-2xl" : "z-20"
+      }`}
       style={{
-        width: collapsed ? 0 : SIDEBAR_WIDTH,
+        width: SIDEBAR_WIDTH,
         background: GRADIENT_PANEL,
-        transition: "width 0.3s ease",
+        ...(isDrawer
+          ? {
+              transform: open ? "translateX(0)" : "translateX(-100%)",
+              transition: "transform 0.3s ease",
+            }
+          : {
+              width: open ? SIDEBAR_WIDTH : 0,
+              transition: "width 0.3s ease",
+            }),
       }}
-      aria-hidden={collapsed}
+      aria-hidden={!open}
     >
-      {/* Logo */}
-      <div className="border-b border-white/10 px-4 py-4">
+      <div className="flex items-center justify-between gap-2 border-b border-white/10 px-4 py-4">
         <TotvsLogoLockup logoClassName="h-8 w-8" tone="light" />
+        {isDrawer && (
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label={t("header.closeMenu")}
+            className="rounded-lg p-1.5 text-white/80 transition-colors hover:bg-white/10 hover:text-white"
+          >
+            <CloseIcon size={18} />
+          </button>
+        )}
       </div>
 
-      {/* Navegação */}
       <nav className="flex-1 overflow-y-auto py-3">
         {NAV_IDS.map((item) => {
           const isActive = active === item.id;
           return (
             <button
               key={item.id}
-              onClick={() => onNav(item.id)}
+              onClick={() => navigate(item.id)}
               aria-current={isActive ? "page" : undefined}
               className={`font-heading flex w-full items-center gap-3 px-4 py-2.5 text-left text-xs leading-tight transition-colors ${
                 isActive
@@ -76,7 +108,6 @@ export default function Sidebar({ active, onNav, onLogout, collapsed }: SidebarP
         })}
       </nav>
 
-      {/* Card do assistente */}
       <div className="m-3 rounded-lg bg-brand-blue/80 p-3">
         <div className="mb-1.5 flex items-center gap-2">
           <div className="h-5 w-5 flex-shrink-0 rounded-full bg-gray-300/30" />
@@ -88,14 +119,13 @@ export default function Sidebar({ active, onNav, onLogout, collapsed }: SidebarP
           {t("sidebar.assistantCard.body")}
         </p>
         <button
-          onClick={() => onNav("assistente")}
+          onClick={() => navigate("assistente")}
           className="font-heading w-full rounded bg-brand-blue py-1.5 text-micro text-white transition-colors hover:bg-brand-blue-dark"
         >
           {t("sidebar.assistantCard.cta")}
         </button>
       </div>
 
-      {/* Sair */}
       <button
         onClick={onLogout}
         className="font-body m-3 mt-0 text-left text-micro text-white/50 transition-colors hover:text-white/80"

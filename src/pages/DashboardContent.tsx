@@ -79,13 +79,13 @@ function TabBar({
 }) {
   return (
     <Card className="p-1">
-      <div className="flex flex-wrap gap-1">
+      <div className="-mx-1 flex gap-1 overflow-x-auto px-1 pb-0.5 sm:flex-wrap sm:overflow-visible">
         {tabs.map((tab) => (
           <button
             key={tab}
             type="button"
             onClick={() => onSelect(tab)}
-            className={`font-body rounded-lg px-3 py-1.5 text-xs transition-colors ${
+            className={`font-body shrink-0 rounded-lg px-3 py-1.5 text-xs transition-colors ${
               active === tab ? "bg-brand-blue text-white" : "text-gray-500 hover:bg-gray-50"
             }`}
           >
