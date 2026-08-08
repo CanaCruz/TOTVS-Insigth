@@ -17,4 +17,8 @@ logs/
 data-source/
 
 # Artefatos gerados por `pnpm data:build`.
-public/data/
+# O índice público PODE ir pro repo (para o CI publicar o Pages).
+# As transcrições NÃO.
+public/data/transcricoes/
+# Mantém o índice versionável:
+# public/data/meetings-index.json  ← commitar quando a base mudar

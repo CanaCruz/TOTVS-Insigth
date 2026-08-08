@@ -27,26 +27,46 @@ textos**. É o que `pnpm data:build:publico` faz.
 Com o build público, o app funciona inteiro — dashboard, KPIs, tabela, filtros,
 paginação. Só o painel de transcrição mostra um aviso explicando a ausência.
 
-## Passo a passo (GitHub Pages — pasta `/docs`)
+## Passo a passo (GitHub Pages — automático no push)
 
-1. Gere o site para Pages (índice público + `dist/` + cópia em `docs/`):
+O workflow `.github/workflows/pages.yml` gera o site em todo push na `main`.
+**Não precisa** rodar `pnpm pages:prepare` no dia a dia.
 
-   ```bash
-   pnpm pages:prepare
-   ```
+### Uma vez no GitHub
 
-2. No GitHub: **Settings → Pages**
-   - Source: Deploy from a branch
-   - Branch: `main`
-   - Folder: `/docs`
-   - Save
+1. **Settings → Pages → Source: GitHub Actions** (não use mais “Deploy from a branch /docs”)
+2. Faça commit do workflow + do índice público:
+   - `.github/workflows/pages.yml`
+   - `public/data/meetings-index.json` (sem pasta `transcricoes/`)
+   - `.gitignore` atualizado
 
-3. Commit e push **incluindo a pasta `docs/`** (ela não está no `.gitignore`
-   de propósito). Não versionar `data-source/` nem `public/data/`.
+### No dia a dia
 
-URL típica: `https://SEU_USER.github.io/NOME_DO_REPO/`
+```bash
+git add .
+git commit -m "sua mensagem"
+git push
+```
 
-Sempre que mudar o app e quiser republicar:
+Espere 1–2 min e confira a Action em **Actions → GitHub Pages**.
+
+### Quando a base de reuniões mudar
+
+Aí sim, localmente (com `data-source/` na máquina):
+
+```bash
+pnpm data:build:publico
+git add public/data/meetings-index.json
+git commit -m "Atualiza índice de reuniões"
+git push
+```
+
+A pasta `docs/` deixa de ser necessária para o Pages (pode ignorar ou apagar depois).
+O comando `pnpm pages:prepare` continua existindo só como opção manual.
+
+## Passo a passo antigo (pasta `/docs`, manual)
+
+Só se ainda estiver com Pages em “Deploy from a branch → /docs”:
 
 ```bash
 pnpm pages:prepare

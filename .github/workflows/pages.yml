@@ -1,0 +1,74 @@
+# Publica o site no GitHub Pages a cada push na main.
+# Você só precisa: git add / commit / push — sem `pnpm pages:prepare`.
+#
+# Configuração única no GitHub:
+#   Settings → Pages → Source: GitHub Actions
+#
+# O índice público (`public/data/meetings-index.json`) precisa estar no repo
+# (sem pasta transcricoes/). Atualize o índice localmente com
+# `pnpm data:build:publico` só quando a base de reuniões mudar.
+
+name: GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.34.3
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Checar índice público
+        run: |
+          if [ ! -f public/data/meetings-index.json ]; then
+            echo "::error::Falta public/data/meetings-index.json no repositório."
+            echo "Rode localmente: pnpm data:build:publico"
+            echo "Depois faça commit de public/data/meetings-index.json (sem transcricoes/)."
+            exit 1
+          fi
+          if [ -d public/data/transcricoes ]; then
+            echo "::error::public/data/transcricoes/ não pode ir pro Pages (dados de cliente)."
+            exit 1
+          fi
+
+      - name: Build
+        run: pnpm build:pages
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
