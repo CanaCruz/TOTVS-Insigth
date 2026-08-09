@@ -49,8 +49,6 @@ const es: Dict = {
     },
   },
   header: {
-    searchPlaceholder: "Buscar reuniones, clientes, análisis...",
-    searchAria: "Buscar",
     themeToLight: "Usar modo claro",
     themeToDark: "Usar modo oscuro",
     openMenu: "Abrir menú",

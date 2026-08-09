@@ -48,7 +48,7 @@ function ordenar(clientes: Cliente[], ordem: Ordem): Cliente[] {
 }
 
 export default function ClientesPage() {
-  const { t } = useLocale();
+  const { t, locale } = useLocale();
   const [search, setSearch] = useState("");
   const [segmento, setSegmento] = useState(ALL);
   const [ordem, setOrdem] = useState<Ordem>("volume");
@@ -110,19 +110,19 @@ export default function ClientesPage() {
           <div className="mb-5 grid grid-cols-1 gap-4 sm:grid-cols-3">
             <Card className="p-5">
               <p className="font-heading text-2xl font-bold text-brand-text">
-                {resumo.total.toLocaleString()}
+                {resumo.total.toLocaleString(locale)}
               </p>
               <p className="font-body mt-1 text-xs text-gray-500">{t("clients.statTotal")}</p>
             </Card>
             <Card className="p-5">
               <p className="font-heading text-2xl font-bold text-brand-text">
-                {resumo.comHistorico.toLocaleString()}
+                {resumo.comHistorico.toLocaleString(locale)}
               </p>
               <p className="font-body mt-1 text-xs text-gray-500">{t("clients.statHistory")}</p>
             </Card>
             <Card className="p-5">
               <p className="font-heading text-2xl font-bold text-brand-text">
-                {resumo.comNps.toLocaleString()}
+                {resumo.comNps.toLocaleString(locale)}
               </p>
               <p className="font-body mt-1 text-xs text-gray-500">{t("clients.statNps")}</p>
             </Card>
@@ -242,7 +242,7 @@ export default function ClientesPage() {
               <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
                 <p className="font-body text-meta text-gray-500">
                   {t("clients.pagination", {
-                    total: filtrados.length.toLocaleString(),
+                    total: filtrados.length.toLocaleString(locale),
                     from: paginaAtual * POR_PAGINA + 1,
                     to: Math.min((paginaAtual + 1) * POR_PAGINA, filtrados.length),
                   })}

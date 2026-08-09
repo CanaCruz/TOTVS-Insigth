@@ -9,9 +9,7 @@ vite.config.*.timestamp-*
 *-debug.log*
 logs/
 *.log
-.claude-replay.*
 .tmp-*
-.claude/
 
 # Dump bruto das reuniões (46 MB) — nunca versionar: é conteúdo de cliente.
 data-source/

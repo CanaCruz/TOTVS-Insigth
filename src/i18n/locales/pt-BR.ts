@@ -50,8 +50,6 @@ const ptBR: Dict = {
     },
   },
   header: {
-    searchPlaceholder: "Buscar reuniões, clientes, análises...",
-    searchAria: "Buscar",
     themeToLight: "Usar modo claro",
     themeToDark: "Usar modo escuro",
     openMenu: "Abrir menu",

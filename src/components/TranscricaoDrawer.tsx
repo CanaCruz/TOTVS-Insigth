@@ -40,7 +40,7 @@ export default function TranscricaoDrawer({
   onClose: () => void;
   textoLocal?: string;
 }) {
-  const { t } = useLocale();
+  const { t, locale } = useLocale();
   const carregar = useCallback(
     () => carregarTexto(reuniao.id, textoLocal),
     [reuniao.id, textoLocal],
@@ -135,7 +135,7 @@ export default function TranscricaoDrawer({
           {data && (
             <>
               <p className="font-body mb-3 text-micro text-gray-400">
-                {t("drawer.charsNote", { n: data.texto.length.toLocaleString("pt-BR") })}
+                {t("drawer.charsNote", { n: data.texto.length.toLocaleString(locale) })}
               </p>
               <pre className="font-body text-meta leading-relaxed whitespace-pre-wrap text-brand-text">
                 {data.texto}

@@ -47,7 +47,7 @@ function npsClass(nps: number) {
 }
 
 export default function TranscricoesPage() {
-  const { t } = useLocale();
+  const { t, locale } = useLocale();
   const fileRef = useRef<HTMLInputElement>(null);
   const [search, setSearch] = useState("");
   const [segmento, setSegmento] = useState(ALL_SEGMENTO);
@@ -276,7 +276,7 @@ export default function TranscricoesPage() {
               <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
                 <p className="font-body text-meta text-gray-500">
                   {t("transcripts.pagination", {
-                    total: filtradas.length.toLocaleString("pt-BR"),
+                    total: filtradas.length.toLocaleString(locale),
                     from: paginaAtual * POR_PAGINA + 1,
                     to: Math.min((paginaAtual + 1) * POR_PAGINA, filtradas.length),
                   })}

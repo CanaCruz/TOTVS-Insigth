@@ -49,8 +49,6 @@ const enUS: Dict = {
     },
   },
   header: {
-    searchPlaceholder: "Search meetings, customers, analyses...",
-    searchAria: "Search",
     themeToLight: "Switch to light mode",
     themeToDark: "Switch to dark mode",
     openMenu: "Open menu",

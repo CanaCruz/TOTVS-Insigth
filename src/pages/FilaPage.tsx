@@ -11,7 +11,7 @@ import StatusBadge from "@/components/ui/StatusBadge";
 import { EmptyState, ErrorState, LoadingState } from "@/components/ui/DataState";
 
 export default function FilaPage() {
-  const { t } = useLocale();
+  const { t, locale } = useLocale();
   const { data, loading, error, sugestao } = useDataset<IndiceReunioes>(
     useCallback(() => getIndice(), []),
   );
@@ -36,7 +36,7 @@ export default function FilaPage() {
             </div>
             <div className="rounded-xl bg-green-50 p-5">
               <p className="font-heading text-2xl font-bold text-green-600">
-                {concluidas.toLocaleString("pt-BR")}
+                {concluidas.toLocaleString(locale)}
               </p>
               <p className="font-body mt-1 text-xs text-gray-500">{t("queue.processed")}</p>
             </div>
@@ -49,7 +49,7 @@ export default function FilaPage() {
           {pendentes.length === 0 ? (
             <EmptyState
               titulo={t("queue.emptyTitle")}
-              descricao={t("queue.emptyBody", { n: concluidas.toLocaleString("pt-BR") })}
+              descricao={t("queue.emptyBody", { n: concluidas.toLocaleString(locale) })}
             />
           ) : (
             <div className="flex flex-col gap-3">

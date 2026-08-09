@@ -4,7 +4,7 @@ import useDataset from "@/data/useDataset";
 import type { Fatia, Reuniao } from "@/data/types";
 import { INSIGHTS, type InsightTab } from "@/data/mockData";
 import { useLocale } from "@/i18n/useLocale";
-import type { TranslateFn } from "@/i18n/types";
+import { getActiveLocale, type TranslateFn } from "@/i18n/types";
 import { capitalizar, formatarData, formatarDuracao } from "@/format";
 import { ClockIcon, SmileIcon, TrendingUpIcon, UsersIcon } from "@/icons";
 import Card, { CardHeader } from "@/components/ui/Card";
@@ -114,7 +114,7 @@ function BarraDistribuicao({ fatias, t }: { fatias: Fatia[]; t: TranslateFn }) {
               {capitalizar(f.rotulo)}
             </span>
             <span className="font-heading flex-shrink-0 text-meta font-semibold text-brand-text">
-              {f.quantidade.toLocaleString("pt-BR")}
+              {f.quantidade.toLocaleString(getActiveLocale())}
               <span className="ml-1 font-normal text-gray-400">{f.percentual}%</span>
             </span>
           </div>
