@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { GRADIENT_PANEL, SIDEBAR_WIDTH } from "@/theme";
 import type { NavId } from "@/navigation";
 import { useLocale } from "@/i18n/useLocale";
@@ -13,6 +14,9 @@ import {
   SettingsIcon,
   UsersIcon,
 } from "@/icons";
+
+/** Duração da animação do logo ao voltar pro dashboard (ms). */
+const LOGO_HOME_MS = 420;
 
 const NAV_IDS: { id: NavId; key: string; icon: React.ReactNode }[] = [
   { id: "dashboard", key: "nav.dashboard", icon: <GridIcon /> },
@@ -49,10 +53,17 @@ export interface SidebarProps {
 export default function Sidebar({ active, onNav, onLogout, open, mode, onClose }: SidebarProps) {
   const { t } = useLocale();
   const isDrawer = mode === "drawer";
+  const [logoBump, setLogoBump] = useState(false);
 
   function navigate(id: NavId) {
     onNav(id);
     if (isDrawer) onClose?.();
+  }
+
+  function irParaDashboard() {
+    setLogoBump(true);
+    window.setTimeout(() => setLogoBump(false), LOGO_HOME_MS);
+    navigate("dashboard");
   }
 
   return (
@@ -76,7 +87,14 @@ export default function Sidebar({ active, onNav, onLogout, open, mode, onClose }
       aria-hidden={!open}
     >
       <div className="flex items-center justify-between gap-2 border-b border-white/10 px-4 py-4">
-        <TotvsLogoLockup logoClassName="h-8 w-8" tone="light" />
+        <button
+          type="button"
+          onClick={irParaDashboard}
+          aria-label={t("nav.dashboard")}
+          className={`logo-home-btn min-w-0 rounded-md text-left ${logoBump ? "logo-home-bump" : ""}`}
+        >
+          <TotvsLogoLockup logoClassName="h-8 w-8" tone="light" />
+        </button>
         {isDrawer && (
           <button
             type="button"

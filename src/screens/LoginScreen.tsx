@@ -67,9 +67,6 @@ export default function LoginScreen({ onNav }: LoginScreenProps) {
 
         <form onSubmit={submeter} className="flex flex-1 flex-col gap-5 p-5 sm:p-8">
           <div>
-            <p className="font-body mb-4 rounded bg-gray-50 px-2 py-1 text-center text-micro text-gray-400">
-              {t("auth.restrictedShort")}
-            </p>
             <h2 className="font-heading mb-1 text-lg font-semibold text-brand-text">
               {t("auth.loginTitle")}
             </h2>

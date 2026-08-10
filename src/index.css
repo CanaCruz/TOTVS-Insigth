@@ -143,3 +143,35 @@ html.dark ::-webkit-scrollbar-thumb {
 html.dark ::-webkit-scrollbar-thumb:hover {
   background: rgba(59, 130, 246, 0.6);
 }
+
+/* Logo da sidebar → volta ao dashboard */
+.logo-home-btn {
+  transform-origin: left center;
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease;
+}
+.logo-home-btn:hover {
+  opacity: 0.92;
+  transform: scale(1.04);
+}
+.logo-home-btn:active {
+  transform: scale(0.96);
+}
+@keyframes logo-home-bump {
+  0% {
+    transform: scale(1);
+  }
+  35% {
+    transform: scale(0.92);
+  }
+  70% {
+    transform: scale(1.06);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.logo-home-btn.logo-home-bump {
+  animation: logo-home-bump 0.42s ease;
+}
