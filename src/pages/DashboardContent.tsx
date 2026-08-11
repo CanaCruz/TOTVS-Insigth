@@ -101,7 +101,9 @@ function TabBar({
 function BarraDistribuicao({ fatias, t }: { fatias: Fatia[]; t: TranslateFn }) {
   if (fatias.length === 0) {
     return (
-      <p className="font-body py-6 text-center text-xs text-gray-400">{t("dashboard.emptyChart")}</p>
+      <p className="font-body py-6 text-center text-xs text-gray-400">
+        {t("dashboard.emptyChart")}
+      </p>
     );
   }
 
@@ -279,11 +281,21 @@ function InsightPanel({ tab, t }: { tab: InsightTab; t: TranslateFn }) {
   return (
     <div className="flex flex-col gap-4">
       <Card className="p-5">
-        <div>
-          <h2 className="font-heading text-base font-semibold text-brand-text">
-            {t(`dashboard.tabs.${tab}`)}
-          </h2>
-          <p className="font-body mt-1 text-xs text-gray-500">{t(`${base}.description`)}</p>
+        {/*
+         * O selo é obrigatório: os números desta aba vêm de `mockData.ts`, não da
+         * base. Sem ele, "R$ 2,4M em oportunidades" fica indistinguível dos KPIs
+         * reais da Visão Geral.
+         */}
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <div className="min-w-0">
+            <h2 className="font-heading text-base font-semibold text-brand-text">
+              {t(`dashboard.tabs.${tab}`)}
+            </h2>
+            <p className="font-body mt-1 text-xs text-gray-500">{t(`${base}.description`)}</p>
+          </div>
+          <span className="font-body flex-shrink-0 rounded-full bg-amber-50 px-2.5 py-1 text-micro text-amber-700">
+            {t("dashboard.mockBadge")}
+          </span>
         </div>
       </Card>
 

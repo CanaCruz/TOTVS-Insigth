@@ -1,8 +1,8 @@
 import { useCallback } from "react";
 import { GRADIENT_PROGRESS } from "@/theme";
-import { getIndice } from "@/data/repository";
+import { getReunioes } from "@/data/repository";
 import useDataset from "@/data/useDataset";
-import type { IndiceReunioes } from "@/data/types";
+import type { Reuniao } from "@/data/types";
 import { useLocale } from "@/i18n/useLocale";
 import { formatarData, formatarDuracao } from "@/format";
 import Card from "@/components/ui/Card";
@@ -12,13 +12,17 @@ import { EmptyState, ErrorState, LoadingState } from "@/components/ui/DataState"
 
 export default function FilaPage() {
   const { t, locale } = useLocale();
-  const { data, loading, error, sugestao } = useDataset<IndiceReunioes>(
-    useCallback(() => getIndice(), []),
+  // `getReunioes()` (e não `getIndice()`) para que uploads da sessão contem aqui
+  // como contam na tabela de transcrições e no dashboard.
+  const { data, loading, error, sugestao } = useDataset<Reuniao[]>(
+    useCallback(() => getReunioes(), []),
   );
 
-  const reunioes = data?.reunioes ?? [];
+  const reunioes = data ?? [];
   const pendentes = reunioes.filter((r) => r.status !== "COMPLETED");
   const concluidas = reunioes.length - pendentes.length;
+  // Calculado, não cravado: com algum item pendente o número deixa de ser 100%.
+  const conclusao = reunioes.length === 0 ? 0 : (concluidas / reunioes.length) * 100;
 
   return (
     <div>
@@ -41,7 +45,9 @@ export default function FilaPage() {
               <p className="font-body mt-1 text-xs text-gray-500">{t("queue.processed")}</p>
             </div>
             <div className="rounded-xl bg-gray-50 p-5">
-              <p className="font-heading text-2xl font-bold text-brand-text">100%</p>
+              <p className="font-heading text-2xl font-bold text-brand-text">
+                {conclusao.toLocaleString(locale, { maximumFractionDigits: 1 })}%
+              </p>
               <p className="font-body mt-1 text-xs text-gray-500">{t("queue.completion")}</p>
             </div>
           </div>

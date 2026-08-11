@@ -40,9 +40,9 @@ This is the canonical project structure. Start with task-relevant files below. O
 - `src/assets/` - Logo (`totvs-logo.png`) e fontes em `fonts/`
 - `index.html` - Plain HTML shell: title, description, `noindex`, favicon
 - `public/` - Copied verbatim into `dist/`: `robots.txt`, `favicon.png`, and generated `data/`
-- `docs/` - Site estático para GitHub Pages (gerado por `pnpm pages:prepare`)
-- `scripts/build-data.mjs`, `scripts/prepare-pages.mjs` - Dados e cópia `dist/` → `docs/`
-- `package.json` - Dependencies and scripts (`dev`, `build`, `typecheck`, `data:build`, `data:build:publico`, `pages:prepare`, `format`)
+- `.github/workflows/pages.yml` - Publica o Pages a cada push na `main`, a partir de `dist/`
+- `scripts/build-data.mjs` - Gera `public/data/` a partir do dump NDJSON
+- `package.json` - Dependencies and scripts (`dev`, `build`, `build:pages`, `typecheck`, `data:build`, `data:build:publico`, `format`)
 - `vite.config.ts` - Minimal Vite config: React, Tailwind v4, and the `@` → `src` alias
 - `vercel.json`, `DEPLOY.md` - Deploy configuration and its safety constraints
 - `.mise.toml` - Toolchain versions for Node.js and pnpm

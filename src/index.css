@@ -102,6 +102,13 @@ html.dark {
   --color-amber-50: #3a2a12;
   --color-blue-50: #152338;
   --color-orange-50: #3a2412;
+
+  /*
+   * O amber-700 original (#b45309) sobre o amber-50 escuro dá 2,75:1 — ilegível
+   * num texto de 10px. É a cor do selo "Dados ilustrativos", justamente o aviso
+   * que não pode passar despercebido. Este tom sobe o contraste para ~8:1.
+   */
+  --color-amber-700: #fbbf24;
 }
 
 * {

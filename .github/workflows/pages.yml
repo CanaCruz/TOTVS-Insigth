@@ -1,5 +1,5 @@
 # Publica o site no GitHub Pages a cada push na main.
-# Você só precisa: git add / commit / push — sem `pnpm pages:prepare`.
+# Você só precisa: git add / commit / push.
 #
 # Configuração única no GitHub:
 #   Settings → Pages → Source: GitHub Actions
@@ -57,6 +57,30 @@ jobs:
 
       - name: Build
         run: pnpm build:pages
+
+      # O Pages nunca leva `transcricoes/` — é dado de cliente e está no
+      # .gitignore. Mas o índice versionado costuma vir de um `pnpm data:build`
+      # local, que o marca `transcricoesDisponiveis: true`. Sem esta correção o
+      # drawer tenta buscar o texto, toma 404 e mostra erro em vez do aviso de
+      # "não publicado". Normalizar aqui é o que impede a regressão de voltar.
+      - name: Marcar transcrições como indisponíveis
+        run: |
+          node -e '
+            const fs = require("node:fs");
+            const arquivo = "dist/data/meetings-index.json";
+            const indice = JSON.parse(fs.readFileSync(arquivo, "utf8"));
+            if (indice.transcricoesDisponiveis === false) {
+              console.log("• índice já marcado como sem transcrições");
+            } else {
+              indice.transcricoesDisponiveis = false;
+              fs.writeFileSync(arquivo, JSON.stringify(indice));
+              console.log("✓ transcricoesDisponiveis ajustado para false");
+            }
+          '
+          if [ -d dist/data/transcricoes ]; then
+            echo "::error::dist/data/transcricoes/ existe — abortando o deploy."
+            exit 1
+          fi
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

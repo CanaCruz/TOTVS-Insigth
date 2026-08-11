@@ -75,20 +75,14 @@ async function carregarIndice(): Promise<IndiceReunioes> {
    */
   const tipo = resposta.headers.get("content-type") ?? "";
   if (!tipo.includes("json")) {
-    throw new DadosIndisponiveisError(
-      translate("errors.notFound"),
-      translate("errors.buildHint"),
-    );
+    throw new DadosIndisponiveisError(translate("errors.notFound"), translate("errors.buildHint"));
   }
 
   let dados: IndiceReunioes;
   try {
     dados = await resposta.json();
   } catch {
-    throw new DadosIndisponiveisError(
-      translate("errors.corrupt"),
-      translate("errors.rebuildHint"),
-    );
+    throw new DadosIndisponiveisError(translate("errors.corrupt"), translate("errors.rebuildHint"));
   }
 
   if (!dados || !Array.isArray(dados.reunioes)) {
@@ -99,10 +93,7 @@ async function carregarIndice(): Promise<IndiceReunioes> {
   }
 
   if (dados.reunioes.length === 0) {
-    throw new DadosIndisponiveisError(
-      translate("errors.empty"),
-      translate("errors.sourceHint"),
-    );
+    throw new DadosIndisponiveisError(translate("errors.empty"), translate("errors.sourceHint"));
   }
 
   /*
@@ -149,11 +140,6 @@ export async function getReunioes(): Promise<Reuniao[]> {
  */
 export async function transcricoesDisponiveis(): Promise<boolean> {
   return (await getIndice()).transcricoesDisponiveis !== false;
-}
-
-/** As `n` reuniões mais recentes. */
-export async function getReunioesRecentes(n = 5): Promise<Reuniao[]> {
-  return (await getReunioes()).slice(0, n);
 }
 
 /**
@@ -320,16 +306,6 @@ export function distribuirPor(reunioes: Reuniao[], campo: keyof Reuniao, limite 
       quantidade,
       percentual: Math.round((quantidade / total) * 100),
     }));
-}
-
-/**
- * Reuniões ainda em processamento.
- *
- * A base atual está 100% "COMPLETED", então isto devolve lista vazia — e a tela
- * de fila mostra o estado vazio correspondente, em vez de dados inventados.
- */
-export async function getFilaProcessamento(): Promise<Reuniao[]> {
-  return (await getReunioes()).filter((r) => r.status !== "COMPLETED");
 }
 
 /** Volume de reuniões por mês, do mais antigo para o mais recente. */

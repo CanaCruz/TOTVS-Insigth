@@ -31,7 +31,7 @@ const enUS: Dict = {
   nav: {
     dashboard: "Dashboard",
     clients: "Clients",
-    transcripts:"Transcripts",
+    transcripts: "Transcripts",
     queue: "Processing queue",
     history: "History",
     reports: "Reports",
@@ -209,6 +209,9 @@ const enUS: Dict = {
     uploadHint: ".txt or .json file — stays in this session only (not uploaded to a server)",
     uploadOk: "Local upload added: {id}. Cleared on page refresh.",
     uploadFail: "Could not read the file.",
+    uploadInvalidJson: "Invalid JSON.",
+    uploadNoText: "The JSON has no text field (texto / transcricao).",
+    uploadEmpty: "Empty file.",
     emptyTitle: "No transcripts found",
     emptyBody: "Adjust the search or filters to see other results.",
     pagination: "{total} meetings · showing {from}–{to}",

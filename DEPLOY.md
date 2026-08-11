@@ -19,18 +19,25 @@ textos**. É o que `pnpm data:build:publico` faz.
 
 ## O que subir
 
-| Comando | Gera | Publicar? |
-|---|---|---|
-| `pnpm data:build` | Índice (471 KB) **+ 1.126 transcrições (43,7 MB)** | Só local, ou atrás de senha |
-| `pnpm data:build:publico` | Só o índice (471 KB) | Sim |
+| Comando                   | Gera                                               | Publicar?                   |
+| ------------------------- | -------------------------------------------------- | --------------------------- |
+| `pnpm data:build`         | Índice (471 KB) **+ 1.126 transcrições (43,7 MB)** | Só local, ou atrás de senha |
+| `pnpm data:build:publico` | Só o índice (471 KB)                               | Sim                         |
 
 Com o build público, o app funciona inteiro — dashboard, KPIs, tabela, filtros,
 paginação. Só o painel de transcrição mostra um aviso explicando a ausência.
 
 ## Passo a passo (GitHub Pages — automático no push)
 
-O workflow `.github/workflows/pages.yml` gera o site em todo push na `main`.
-**Não precisa** rodar `pnpm pages:prepare` no dia a dia.
+O workflow `.github/workflows/pages.yml` gera o site em todo push na `main`, a
+partir de `dist/`. Não existe mais pasta `docs/`.
+
+Antes de subir o artefato, o workflow **força `transcricoesDisponiveis: false`**
+no índice. Isso existe porque o índice versionado costuma vir de um
+`pnpm data:build` local, que o marca `true`: sem a correção, o painel de
+transcrição tentaria buscar um arquivo que nunca foi publicado e mostraria erro
+em vez do aviso de "não publicado". Ou seja, commitar o índice do build completo
+por engano não quebra mais o site.
 
 ### Uma vez no GitHub
 
@@ -61,19 +68,10 @@ git commit -m "Atualiza índice de reuniões"
 git push
 ```
 
-A pasta `docs/` deixa de ser necessária para o Pages (pode ignorar ou apagar depois).
-O comando `pnpm pages:prepare` continua existindo só como opção manual.
-
-## Passo a passo antigo (pasta `/docs`, manual)
-
-Só se ainda estiver com Pages em “Deploy from a branch → /docs”:
-
-```bash
-pnpm pages:prepare
-git add docs
-git commit -m "Atualiza site do GitHub Pages"
-git push
-```
+Depois disso, rode `pnpm data:build` de novo se quiser as transcrições de volta
+no ambiente local — o build público apaga `public/data/transcricoes/`. O índice
+vai voltar a ficar marcado como modificado no git, e tudo bem: o workflow
+normaliza a flag na publicação.
 
 ## Passo a passo (Vercel)
 
@@ -115,6 +113,6 @@ Não deixe como arquivo estático. Duas opções, em ordem de esforço:
 ## Checklist antes de publicar
 
 - [ ] Rodou `pnpm data:build:publico` (e não o `data:build` completo)
-- [ ] `dist/data/transcricoes/` **não existe** (nem `docs/data/transcricoes/`)
+- [ ] `dist/data/transcricoes/` **não existe**
 - [ ] `npx tsc --noEmit` limpo (o `pnpm build` sozinho não checa tipos)
 - [ ] Trocou as contas de demonstração em `src/auth/authService.ts`

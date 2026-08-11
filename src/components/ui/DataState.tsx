@@ -2,11 +2,6 @@ import { AlertTriangleIcon } from "@/icons";
 import { translate } from "@/i18n/translate";
 import Card from "./Card";
 
-/** Placeholder pulsante usado enquanto os dados carregam. */
-export function Skeleton({ className = "" }: { className?: string }) {
-  return <div className={`animate-pulse rounded bg-gray-200/70 ${className}`} />;
-}
-
 export function LoadingState({ label }: { label?: string }) {
   return (
     <Card className="flex flex-col items-center justify-center gap-3 p-12">

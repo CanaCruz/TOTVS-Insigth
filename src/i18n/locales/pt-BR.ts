@@ -210,6 +210,9 @@ const ptBR: Dict = {
     uploadHint: "Arquivo .txt ou .json — fica só nesta sessão (não sobe para servidor)",
     uploadOk: "Upload local adicionado: {id}. Some ao atualizar a página.",
     uploadFail: "Não foi possível ler o arquivo.",
+    uploadInvalidJson: "JSON inválido.",
+    uploadNoText: "O JSON não tem campo de texto (texto / transcricao).",
+    uploadEmpty: "Arquivo vazio.",
     emptyTitle: "Nenhuma transcrição encontrada",
     emptyBody: "Ajuste a busca ou os filtros para ver outros resultados.",
     pagination: "{total} reuniões · exibindo {from}–{to}",
@@ -265,7 +268,8 @@ const ptBR: Dict = {
   assistant: {
     title: "Assistente IA",
     subtitle: "Faça perguntas sobre suas reuniões, clientes e análises.",
-    greeting: "Olá{name}! Sou o Assistente TOTVS Insight. Posso analisar suas transcrições, identificar padrões e responder dúvidas sobre os dados. Como posso ajudar?",
+    greeting:
+      "Olá{name}! Sou o Assistente TOTVS Insight. Posso analisar suas transcrições, identificar padrões e responder dúvidas sobre os dados. Como posso ajudar?",
     replyDefault:
       "Entendido! Estou analisando os dados das suas transcrições para responder com precisão. Por enquanto, posso dizer que os insights das reuniões mais recentes apontam para oportunidades em clientes do setor industrial. Deseja um relatório completo?",
     placeholder: "Pergunte sobre reuniões, clientes, tendências...",

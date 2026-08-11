@@ -31,7 +31,7 @@ const es: Dict = {
   nav: {
     dashboard: "Dashboard",
     clients: "Clientes",
-    transcripts:"Transcripciones",
+    transcripts: "Transcripciones",
     queue: "Cola de procesamiento",
     history: "Historial",
     reports: "Informes",
@@ -192,7 +192,8 @@ const es: Dict = {
     npsCoverage: "de {answers} respuestas en {total} reuniones",
     npsNone: "Ninguna reunión de este cliente tiene respuesta de encuesta.",
     timeline: "Duración a lo largo del tiempo",
-    timelineHint: "Cada barra es una reunión, de la más antigua a la más reciente. Altura = duración.",
+    timelineHint:
+      "Cada barra es una reunión, de la más antigua a la más reciente. Altura = duración.",
     timelineCount: "{n} reuniones",
     meetings: "Reuniones",
   },
@@ -209,6 +210,9 @@ const es: Dict = {
     uploadHint: "Archivo .txt o .json — solo en esta sesión (no se envía al servidor)",
     uploadOk: "Carga local añadida: {id}. Desaparece al actualizar la página.",
     uploadFail: "No se pudo leer el archivo.",
+    uploadInvalidJson: "JSON no válido.",
+    uploadNoText: "El JSON no tiene campo de texto (texto / transcricao).",
+    uploadEmpty: "Archivo vacío.",
     emptyTitle: "No se encontraron transcripciones",
     emptyBody: "Ajuste la búsqueda o los filtros para ver otros resultados.",
     pagination: "{total} reuniones · mostrando {from}–{to}",

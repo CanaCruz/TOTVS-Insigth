@@ -5,6 +5,7 @@
  * em memória e, se houver texto, no drawer da transcrição.
  */
 
+import { translate } from "@/i18n/translate";
 import type { Reuniao } from "./types";
 
 export interface UploadLocal {
@@ -65,6 +66,9 @@ function segundosDeDuracao(hhmmss: string | undefined): number {
 /**
  * Interpreta `.txt` (texto puro) ou `.json` com campos comuns.
  * Gera id `LOCAL-…` quando o arquivo não traz um.
+ *
+ * As mensagens de erro vão direto para a tela, então passam pelo dicionário —
+ * mesmo padrão de `repository.ts`.
  */
 export function parseArquivoUpload(nome: string, conteudo: string): UploadLocal {
   const baseNome = nome.replace(/\.[^.]+$/, "") || "upload";
@@ -91,13 +95,15 @@ export function parseArquivoUpload(nome: string, conteudo: string): UploadLocal 
     try {
       json = JSON.parse(conteudo);
     } catch {
-      throw new Error("JSON inválido");
+      throw new Error(translate("transcripts.uploadInvalidJson"));
     }
-    if (!json || typeof json !== "object") throw new Error("JSON inválido");
+    if (!json || typeof json !== "object") {
+      throw new Error(translate("transcripts.uploadInvalidJson"));
+    }
     const o = json as Record<string, unknown>;
     const rawTexto = o.texto ?? o.text ?? o.transcricao ?? o.transcript;
     if (typeof rawTexto !== "string" || !rawTexto.trim()) {
-      throw new Error("JSON sem campo de texto (texto / transcricao)");
+      throw new Error(translate("transcripts.uploadNoText"));
     }
     texto = rawTexto.trim();
     if (typeof o.id === "string" && o.id.trim()) id = o.id.trim();
@@ -115,7 +121,7 @@ export function parseArquivoUpload(nome: string, conteudo: string): UploadLocal 
     if (typeof o.nps === "number") nps = o.nps;
   }
 
-  if (!texto) throw new Error("Arquivo vazio");
+  if (!texto) throw new Error(translate("transcripts.uploadEmpty"));
 
   const duracaoSegundos = segundosDeDuracao(duracao);
   const reuniao: Reuniao = {
