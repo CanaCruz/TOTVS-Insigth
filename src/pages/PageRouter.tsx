@@ -3,7 +3,7 @@ import AjudaPage from "./AjudaPage";
 import AssistentePage from "./AssistentePage";
 import ClientesPage from "./ClientesPage";
 import ConfiguracoesPage from "./ConfiguracoesPage";
-import DashboardContent from "./DashboardContent";
+import DashboardPage from "./DashboardPage";
 import FilaPage from "./FilaPage";
 import HistoricoPage from "./HistoricoPage";
 import PerfilPage from "./PerfilPage";
@@ -38,6 +38,6 @@ export default function PageRouter({
       return <AjudaPage onNav={onNav} />;
     case "dashboard":
     default:
-      return <DashboardContent />;
+      return <DashboardPage />;
   }
 }

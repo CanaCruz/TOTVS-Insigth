@@ -5,7 +5,7 @@ import { validarCredenciais } from "@/auth/authService";
 import type { ErrosFormulario } from "@/auth/types";
 import { useLocale } from "@/i18n/useLocale";
 import { AlertTriangleIcon, EyeIcon } from "@/icons";
-import { AuthCard, AuthLeftPanel, GradientBg } from "@/components/auth/AuthLayout";
+import { AuthCard, AuthLeftPanel, GradientBg } from "@/components/layout/AuthLayout";
 import InputField from "@/components/ui/InputField";
 import LinkBtn from "@/components/ui/LinkBtn";
 import PrimaryBtn from "@/components/ui/PrimaryBtn";

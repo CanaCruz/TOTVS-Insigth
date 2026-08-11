@@ -2,7 +2,7 @@ import { useState } from "react";
 import type { AuthScreen } from "@/navigation";
 import { useLocale } from "@/i18n/useLocale";
 import { EyeIcon, LockIcon } from "@/icons";
-import { AuthCard, AuthHeading, AuthLeftPanel, GradientBg } from "@/components/auth/AuthLayout";
+import { AuthCard, AuthHeading, AuthLeftPanel, GradientBg } from "@/components/layout/AuthLayout";
 import CheckItem from "@/components/ui/CheckItem";
 import InputField from "@/components/ui/InputField";
 import PrimaryBtn from "@/components/ui/PrimaryBtn";

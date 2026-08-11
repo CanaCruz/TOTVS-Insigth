@@ -329,7 +329,7 @@ function InsightPanel({ tab, t }: { tab: InsightTab; t: TranslateFn }) {
   );
 }
 
-export default function DashboardContent() {
+export default function DashboardPage() {
   const { t, locale } = useLocale();
   const [activeTab, setActiveTab] = useState<TabId>("overview");
 
