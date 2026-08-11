@@ -39,6 +39,19 @@ transcrição tentaria buscar um arquivo que nunca foi publicado e mostraria err
 em vez do aviso de "não publicado". Ou seja, commitar o índice do build completo
 por engano não quebra mais o site.
 
+### Git LFS — não remova o `lfs: true`
+
+O `.gitattributes` põe `*.png`, `*.ttf` e `*.woff2` no Git LFS. O que está
+versionado é um ponteiro de 130 bytes, não o binário.
+
+Se o checkout do workflow rodar sem `lfs: true`, o build empacota o texto do
+ponteiro como se fosse imagem e fonte. **O deploy não falha** — o servidor
+devolve HTTP 200 com `content-type: image/png` — mas o site sobe sem a logo e
+sem a tipografia da marca. Foi o que aconteceu até agora.
+
+Existe um passo "Checar binários do LFS" que aborta o build se algum ponteiro
+escapar (útil se a cota de LFS do repositório estourar).
+
 ### Uma vez no GitHub
 
 1. **Settings → Pages → Source: GitHub Actions** (não use mais “Deploy from a branch /docs”)

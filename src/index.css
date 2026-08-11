@@ -1,9 +1,6 @@
 /*
- * Fontes servidas pelo próprio projeto (`src/assets/fonts/`).
- *
- * Antes vinham de `static.figma.com`, o que deixava a tipografia do app
- * dependendo de um CDN de terceiros — se aquelas URLs mudassem, o site perdia
- * as fontes em produção.
+ * Fontes servidas pelo próprio projeto (`src/assets/fonts/`), e não por um CDN
+ * de terceiros: se aquelas URLs mudassem, o site perderia as fontes em produção.
  *
  * Konkhmer Sleokchher usa o subset latino em woff2 do Google Fonts (19 KB, em
  * vez dos 624 KB do arquivo completo com todos os glifos khmer, que este app

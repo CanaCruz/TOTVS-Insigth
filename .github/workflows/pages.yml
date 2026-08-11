@@ -28,7 +28,14 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      # `lfs: true` é obrigatório: o .gitattributes põe *.png, *.ttf e *.woff2
+      # no Git LFS, e o checkout padrão traz só os ponteiros de 130 bytes. Sem
+      # isto o Vite empacota o texto do ponteiro como se fosse imagem e fonte —
+      # o site sobe sem a logo e sem a tipografia da marca, e sem erro nenhum,
+      # porque o servidor devolve 200 com o content-type certo.
       - uses: actions/checkout@v4
+        with:
+          lfs: true
 
       - uses: pnpm/action-setup@v4
         with:
@@ -54,6 +61,23 @@ jobs:
             echo "::error::public/data/transcricoes/ não pode ir pro Pages (dados de cliente)."
             exit 1
           fi
+
+      # Rede de segurança para o caso de a cota de LFS estourar ou o `lfs: true`
+      # sumir num refactor: um ponteiro passa batido pelo build inteiro.
+      - name: Checar binários do LFS
+        run: |
+          faltando=0
+          for f in $(git ls-files '*.png' '*.ttf' '*.woff2'); do
+            if head -c 40 "$f" | grep -q "^version https://git-lfs"; then
+              echo "::error::$f é um ponteiro LFS, não o arquivo real."
+              faltando=1
+            fi
+          done
+          if [ "$faltando" = "1" ]; then
+            echo "Rode o checkout com 'lfs: true' ou verifique a cota de LFS do repositório."
+            exit 1
+          fi
+          echo "✓ binários íntegros"
 
       - name: Build
         run: pnpm build:pages
